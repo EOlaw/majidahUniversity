@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Course - <%= course.title %></title>
+</head>
+<body>
+    <h1>Delete Course - <%= course.title %></h1>
+    <form action="/course/<%= course._id %>/delete" method="POST">
+        <button type="submit">Delete Course</button>
+    </form>
+</body>
+</html>

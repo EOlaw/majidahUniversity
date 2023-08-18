@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+    <!-- Add your CSS links and other head elements here -->
+</head>
+<body>
+    <div>
+        <h1>User Registration</h1>
+        <form action="/register" method="POST">
+            <div>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <!-- Add additional fields for first name, last name, email, role, etc. as needed -->
+            <div>
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div>
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+                <label for="role">Role</label>
+                <select id="role" name="role" required>
+                    <option value="" disabled selected>Select Role</option>
+                    <option value="student">Student</option>
+                    <option value="instructor">Instructor</option>
+                </select>
+            </div>
+            <!-- End of additional fields -->
+
+            <div>
+                <button type="submit">Register</button>
+            </div>
+        </form>
+        <p>Already have an account? <a href="/login">Login here</a></p>
+    </div>
+    <!-- Add your additional content and scripts here -->
+</body>
+</html>
+

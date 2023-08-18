@@ -1,0 +1,22 @@
+const express = require('express');
+const router = express.Router();
+const instructorController = require('../controllers/instructorControllers');
+const { isAuthenticated, isInstructor } = require('../controllers/authControllers');
+
+
+// Middleware to check if the user is authenticated as an instructor
+router.use(isAuthenticated, isInstructor);
+
+// Route to teach a course
+router.post('/teach/:courseId', instructorController.teachCourse);
+
+// Route to assign an assignment to a course
+router.post('/assign/:courseId', instructorController.assignAssignment);
+
+// Route to view student submissions for a specific assignment in a course
+router.get('/submissions/:courseId/:assignmentId', instructorController.viewSubmissions);
+
+// Route to grade a student's submission for a specific assignment
+router.post('/grade/:submissionId', instructorController.gradeStudent);
+
+module.exports = router;

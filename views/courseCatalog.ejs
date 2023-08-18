@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Course Catalog</title>
+</head>
+<body>
+    <h1>Course Catalog</h1>
+    <ul>
+        <% courses.forEach(course => { %>
+            <li>
+                <a href="/course/<%= course._id %>/details"><%= course.title %></a>
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>

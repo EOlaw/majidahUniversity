@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Course - <%= course.title %></title>
+</head>
+<body>
+    <h1>Update Course - <%= course.title %></h1>
+    <form action="/course/<%= course._id %>/update?_method=PUT" method="POST">
+        <label for="title">Title:</label>
+        <input type="text" name="title" value="<%= course.title %>">
+
+        <label for="description">Description:</label>
+        <textarea name="description"><%= course.description %></textarea>
+
+        <label for="instructor">Instructor:</label>
+        <input type="text" name="instructor" value="<%= course.instructor %>">
+
+        <button type="submit">Update Course</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create New Course</title>
+</head>
+<body>
+    <h1>Create New Course</h1>
+    <form action="/course" method="POST">
+        <label for="title">Title:</label>
+        <input type="text" name="title" required>
+
+        <label for="description">Description:</label>
+        <textarea name="description" required></textarea>
+
+        <label for="instructor">Instructor:</label>
+        <input type="text" name="instructor" required>
+
+        <button type="submit">Create Course</button>
+    </form>
+</body>
+</html>

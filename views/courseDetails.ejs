@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= course.title %> - Course Details</title>
+</head>
+<body>
+    <h1><%= course.title %></h1>
+    <p>Instructor: <%= course.instructor %></p>
+    <p>Description: <%= course.description %></p>
+    <% if (isAuthenticated) { %>
+    <% } %>
+    <!-- Link to Update Course -->
+    <a href="/course/<%= course._id %>/edit">Update Course</a>
+    <!-- Link to Delete Course -->
+    <a href="/course/<%= course._id %>/delete">Delete Course</a>
+   
+</body>
+</html>
+
