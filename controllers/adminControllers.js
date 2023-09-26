@@ -1,6 +1,388 @@
 const User = require('../models/userModels');
-const Course = require('../models/courseModels');
-const Administrator = require('../models/adminModels');
+const Department = require('../models/departmentModels');
+const { Course } = require('../models/courseModels');
+const { Announcement } = require('../models/announcementModels');
+const Resource = require('../models/resourceModels');
+const Document = require('../models/documentModels');
+//const Administrator = require('../models/adminModels');
+
+module.exports = {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////// User Management ////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //Create User
+  createUser: async (req, res, next) => {
+    //Implement user creation logic
+    try {
+      const { fullName, username, password, email, role } = req.body;
+      const user = new User({fullName, username, password, email, role});
+      const registeredUser = await User.register(user, password)
+      req.login(registeredUser, err => { //Automatically loggin a new register user once he successful register
+        if (err) return next(err);
+        res.redirect('/')
+    })
+    } catch (err) {
+      console.log(err);
+      res.redirect('register')
+    }
+  },
+  //Update User
+  updateUser: async (req, res, next) => {
+    // Implement user update logic
+    try {
+      const userId = req.params.userId;
+      const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
+      if (!updatedUser) {
+        return res.status(404).json({ error: 'User not found' })
+      }
+      res.status(200).json(updatedUser)
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Error updating user.' })
+    }
+  },
+  //Get A User
+  getUserById: async (req, res, next) => {
+      // Implement user retrieval logic
+      try {
+        const userId = req.params.userId;
+        const user = await User.findById(userId);
+        if (!user) {
+          return res.status(404).json({ error: 'User not found' })
+        }
+        res.status(200).json(user);
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error fetching user' })
+      }
+  },
+  //Get All Users
+  getAllUsers: async (req, res, next) => {
+      // Implement fetching all users logic
+      try {
+        const user = await User.find();
+        res.status(200).json(user);
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error fetching users.' })
+      }
+  },
+  //Delete User
+  deleteUser: async (req, res, next) => {
+    try {
+      const userId = req.params.userId;
+      const deletedUser = await User.findByIdAndDelete(userId);
+      if (!deletedUser) {
+        res.status(404).json({ error: 'User not found.' });
+      }
+      res.status(200).json({ message: ' User deleted successfully.' });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Error deleting user.' });
+    }
+  },
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////// DEPARTMENT MANAGEMENT /////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //Create Department
+  createDepartment: async (req, res, next) => {
+    // Implement department creation logic
+    try {
+      const { departmentName } = req.body;
+      const department = new Department({ departmentName });
+      const savedDepartment = await department.save();
+      res.status(201).json({ department: savedDepartment})
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Error creating department' });
+    }
+  },
+
+  updateDepartment: async (req, res, next) => {
+      // Implement department update logic
+      try {
+        const departmentId = req.params.departmentId;
+        const updatedDepartment = await Department.findByIdAndUpdate( departmentId, req.body, { new: true } );
+        if (!updatedDepartment) {
+          return res.status(404).json({ error: 'Department not found' });
+        }
+        res.status(200).json(updatedDepartment);
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error updating department' });
+      }
+  },
+
+  getDepartmentById: async (req, res, next) => {
+      // Implement department retrieval logic
+      try {
+        const departmentId = req.params.departmentId;
+        const department = await Department.findById(departmentId);
+        if (!department) {
+          return res.status(404).json({ error: 'Department not found.' })
+        }
+        res.status(200).json(department);
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error fetching department. '})
+      }
+  },
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////// SEMESTER AND COURSE MANAGEMENT ////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //Create Course
+  createCourse: async (req, res, next) => {
+    // Implement course creation logic
+    try {
+      const { courseCode, courseName, instructors, schedules } = req.body;
+      const course = new Course({ courseCode, courseName, instructors, schedules });
+      const savedCourse = await course.save();
+      res.status(201).json(savedCourse);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Error creating course' });
+    }
+  },
+  //Update Course
+  updateCourse: async (req, res, next) => {
+      // Implement course update logic
+      try {
+        const courseId = req.params.courseId;
+        const updatedCourse = await Course.findByIdAndUpdate( courseId, req.body, { new: true });
+        if (!updatedCourse) {
+          return res.status(404).json({ error: 'Course not found.' })
+        }
+        res.status(200).json(updatedCourse)
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error updating course.' })
+      }
+  },
+  //Get Course by ID
+  getCourseById: async (req, res, next) => {
+      // Implement course retrieval logic
+      try {
+        const courseId = req.params.courseId;
+        const course = await Course.findById(courseId);
+        if (!course) {
+          return res.status(404).json({ error: 'Course not found' });
+        }
+        res.status(200).json(course);
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error fetching course.' })
+      }
+  },
+  //Delete Course
+  deleteCourse: async (req, res, next) => {
+      try {
+        const courseId = req.params.courseId;
+        const deletedCourse = await Course.findByIdAndDelete(courseId);
+        if (!deletedCourse) {
+          return res.status(404).json({ error: 'Course not found' });
+        }
+        res.status(200).json({ message: 'Course deleted successfully' })
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error deleting course' });
+      }
+  },
+  // Create Schedule for Course
+  createSchedule: async (req, res, next) => {
+      try {
+          const courseId = req.params.courseId;
+          const { semester, startDate, endDate, sessions } = req.body;
+
+          // Find the course by its ID
+          const course = await Course.findById(courseId);
+          if (!course) {
+              return res.status(404).json({ error: 'Course not found.' });
+          }
+
+          // Add the new schedule to the course's schedules array
+          course.schedules.push({ semester, startDate, endDate, sessions });
+          const updatedCourse = await course.save();
+          res.status(201).json(updatedCourse);
+      } catch (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Error creating course schedule.' });
+      }
+  },
+
+  // Update Schedule for Course
+  updateSchedule: async (req, res, next) => {
+      try {
+          const courseId = req.params.courseId;
+          const scheduleId = req.params.scheduleId;
+          const { semester, startDate, endDate, sessions } = req.body;
+
+          // Find the course by its ID
+          const course = await Course.findById(courseId);
+          if (!course) {
+              return res.status(404).json({ error: 'Course not found.' });
+          }
+
+          // Find the index of the schedule to update
+          const scheduleIndex = course.schedules.findIndex(schedule => schedule._id.equals(scheduleId));
+          if (scheduleIndex === -1) {
+              return res.status(404).json({ error: 'Schedule not found.' });
+          }
+
+          // Update the schedule properties
+          const updatedSchedule = course.schedules[scheduleIndex];
+          updatedSchedule.semester = semester;
+          updatedSchedule.startDate = startDate;
+          updatedSchedule.endDate = endDate;
+          updatedSchedule.sessions = sessions;
+
+          // Save the updated course
+          await course.save();
+          res.status(200).json(course);
+      } catch (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Error updating course schedule.' });
+      }
+  },
+
+  // Delete Schedule for Course
+  deleteSchedule: async (req, res, next) => {
+      try {
+          const courseId = req.params.courseId;
+          const scheduleId = req.params.scheduleId;
+
+          // Find the course by its ID
+          const course = await Course.findById(courseId);
+          if (!course) {
+              return res.status(404).json({ error: 'Course not found.' });
+          }
+
+          // Find the index of the schedule to delete
+          const scheduleIndex = course.schedules.findIndex(schedule => schedule._id.equals(scheduleId));
+          if (scheduleIndex === -1) {
+              return res.status(404).json({ error: 'Schedule not found.' });
+          }
+
+          // Remove the schedule from the array
+          course.schedules.splice(scheduleIndex, 1);
+
+          // Save the updated course
+          await course.save();
+          res.status(200).json(course);
+      } catch (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Error deleting course schedule.' });
+      }
+  },
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////// Events & Announcements //////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //Create Announcement
+  createAnnouncement: async (req, res, next) => {
+    // Implement announcement creation logic
+    try {
+      const { title, content } = req.body;
+      const announcement = new Announcement({ title, content });
+      const savedAnnouncement = await announcement.save();
+      res.status(201).json(savedAnnouncement);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Error creating announcement' })
+    }
+  },
+  //Get Announcement by ID
+  getAnnouncements: async (req, res, next) => {
+      // Implement fetching all announcements logic
+      try {
+        const announcementId = req.params.announcementId;
+        const announcement = await Announcement.findById(announcementId);
+        if (!announcement) {
+          return res.status(404).json({ error: 'Announcement not found' });
+        }
+        res.status(200).json({ announcement })
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error fetching announcement' });
+      }
+  },
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////// Resource Allocation //////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //Create Resource
+  createResource: async (req, res, next) => {
+    // Implement resource creation logic
+    try {
+      const { name, type, capacity, equipment } = req.body;
+      const resource = new Resource({ name, type, capacity, equipment });
+      const savedResource = await resource.save();
+      res.status(201).json(savedResource)
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Error creating resource.' })
+    }
+  },
+  //Get Resource by ID
+  getResources: async (req, res, next) => {
+      // Implement fetching all resources logic
+      try {
+        const resourceId = req.params.resourceId;
+        const resource = await Resource.findById(resourceId);
+        if (!resource) {
+          return res.status(404).json({ error: 'Resource not found.' })
+        }
+        res.status(200).json(resource);
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Error fetching resource.' })
+      }
+  },
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////// Document Management /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //Upload Document
+  uploadDocument: async (req, res, next) => {
+    // Implement document upload logic
+      try {
+        const { title, description, fileUrl } = req.body;
+        const document = new Document({ title, description, fileUrl });
+        const savedDocument = await document.save();
+        res.status(201).json(savedDocument);
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error uploading document.' });
+    }
+  },
+  //Get Document By ID
+  getDocuments: async (req, res, next) => {
+      // Implement fetching all documents logic
+      try {
+        const documentId = req.params.documentId;
+        const document = await Document.findById(documentId);
+        if (!document) {
+            return res.status(404).json({ error: 'Document not found.' });
+        }
+        res.status(200).json(document);
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error fetching document.' });
+    }
+  }
+
+}
+
+
+
+/*
 
 // Administrator Routes for Courses
 module.exports.getAllCourses = async (req, res, next) => {
@@ -214,7 +596,7 @@ module.exports.deleteStudent = async (req, res, next) => {
   
 
 
-
+*/
 
 
 

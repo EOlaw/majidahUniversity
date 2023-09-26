@@ -3,7 +3,45 @@ const router = express.Router();
 const adminController = require('../controllers/adminControllers')
 const { isAuthenticated, isAdmin } = require('../controllers/authControllers')
 
+// User Management Routes
+router.post('/users/create', adminController.createUser);
+router.put('/users/:userId/update', adminController.updateUser);
+router.get('/users/:userId', adminController.getUserById);
+router.get('/users', adminController.getAllUsers);
+router.delete('/users/:userId', adminController.deleteUser);
 
+// Department Management Routes
+router.post('/departments/create', adminController.createDepartment);
+router.put('/departments/:departmentId/update', adminController.updateDepartment);
+router.get('/departments/:departmentId', adminController.getDepartmentById);
+
+// Semester and Course Management Routes
+router.post('/courses/create', adminController.createCourse);
+router.put('/courses/:courseId/update', adminController.updateCourse);
+router.get('/courses/:courseId', adminController.getCourseById);
+router.delete('/courses/:courseId', adminController.deleteCourse);
+router.post('/courses/:courseId/schedule/create', adminController.createSchedule);
+router.put('/courses/:courseId/schedule/:scheduleId/update', adminController.updateSchedule);
+router.delete('/courses/:courseId/schedule/:scheduleId/delete', adminController.deleteSchedule);
+
+// Events & Announcements Routes
+router.post('/announcements/create', adminController.createAnnouncement);
+router.get('/announcements/:announcementId', adminController.getAnnouncements);
+
+// Resource Allocation Routes
+router.post('/resources/create', adminController.createResource);
+router.get('/resources/:resourceId', adminController.getResources);
+
+// Document Management Routes
+router.post('/documents/upload', adminController.uploadDocument);
+router.get('/documents/:documentId', adminController.getDocuments);
+
+module.exports = router;
+
+
+
+
+/*
 // Administrator Routes for Courses
 router.get('/admin/courses', isAuthenticated, isAdmin, adminController.getAllCourses);
 router.post('/admin/courses', isAuthenticated, isAdmin, adminController.createCourse);
@@ -24,6 +62,7 @@ router.put('/admin/students/:id', isAuthenticated, isAdmin, adminController.upda
 router.delete('/admin/students/:id', isAuthenticated, isAdmin, adminController.deleteStudent);
 
 module.exports = router;
+*/
 
 
 

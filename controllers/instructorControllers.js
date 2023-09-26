@@ -1,3 +1,64 @@
+const { Material, Syllabus, GradeCriteria } = require('../models/courseModels')
+
+module.exports = {
+    createMaterial: async (req, res, next) => {
+        try {
+            const { title, content, courseId } = req.body;
+            const material = new Material({ title, content, courseId });
+            const savedMaterial = await material.save();
+            res.status(201).json(savedMaterial);
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({ error: 'Error creating material.' })
+        }
+    },
+    //Create Syllabus
+    createSyllabus: async (req, res, next) => {
+        try {
+            const { title, content, courseId } = req.body;
+            const syllabus = new Syllabus({ title, content, courseId });
+            const savedSyllabus = await syllabus.save();
+            res.status(201).json(savedSyllabus)
+        } catch (err) {
+            console.log(err)
+            res.status(500).json({ error: 'Error creating syllabus.' })
+        }
+    },
+    //Create Grade Criteria
+    createGradeCriteria: async (req, res, next) => {
+        try {
+            const { title, content, courseId } = req.body;
+            const gradeCriteria = new GradeCriteria({ title, content, courseId });
+            const savedGradeCriteria = await gradeCriteria.save();
+            res.status(201).json(savedGradeCriteria)
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({ error: 'Error creating grade criteria.' })
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
 const Course = require('../models/courseModels');
 const Assignment = require('../models/assignmentModels')
 const Submission = require('../models/submissionModels')
@@ -114,4 +175,8 @@ module.exports.gradeStudent = async (req, res, next) => {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while grading the student.' });
     }
+
+
 };
+
+*/

@@ -3,6 +3,8 @@ const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const instructorSchema = new Schema({
+
+  
   /*
   firstName: {
     type: String,

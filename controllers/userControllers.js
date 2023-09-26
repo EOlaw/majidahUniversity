@@ -1,7 +1,15 @@
 const User = require('../models/userModels')
 
-module.exports.renderRegister = (req, res) => {
-    res.render('register')
+module.exports.renderRegister = async (req, res) => {
+    try {
+        const register = await User.find()
+    console.log(register)
+    res.status(200).json(register)
+    //res.render('register')
+    } catch (err) {
+        console.log(err)
+    }
+    
 }
 
 module.exports.register = async (req, res, next) => {
@@ -9,7 +17,6 @@ module.exports.register = async (req, res, next) => {
         const { firstName, lastName, username, email, password, role } = req.body
         const user = new User({ firstName, lastName, username, email, password, role });
         const registeredUser = await User.register(user, password);
-        console.log(user)
         console.log(registeredUser)
         req.login(registeredUser, err => { //Automatically loggin a new register user once he successful register
             if (err) return next(err);

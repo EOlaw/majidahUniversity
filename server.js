@@ -12,11 +12,11 @@ const passportLocal = require('passport-local');
 const User = require('./models/userModels')
 
 
-//const homeRoutes = require('./routes/homeRoutes')
+const homeRoutes = require('./routes/homeRoutes')
 const userRoutes = require('./routes/userRoutes')
-//const adminRoutes = require('./routes/adminRoutes')
-//const studentRoutes = require('./routes/studentRoutes')
-//const instructorRoutes = require('./routes/instructorRoutes')
+const adminRoutes = require('./routes/adminRoutes')
+const studentRoutes = require('./routes/studentRoutes')
+const instructorRoutes = require('./routes/instructorRoutes')
 
 
 // Set up the database connection
@@ -70,11 +70,11 @@ app.use((req, res, next) => {
 
 
 
-//app.use('/', homeRoutes)
-app.use('/', userRoutes)
-//app.use('/', adminRoutes);
-//app.use('/', instructorRoutes)
-//app.use('/', studentRoutes);
+app.use('/', homeRoutes)
+app.use('/user', userRoutes)
+app.use('/admin', adminRoutes);
+app.use('/instructor', instructorRoutes)
+app.use('/student', studentRoutes);
 
 
 app.listen(4000, () => {
